@@ -1,59 +1,37 @@
 const { ApolloServer } = require('apollo-server');
 const { makeExecutableSchema } = require('graphql-tools');
+const bodyParser = require('body-parser');
+
+const { merge } = require('lodash');
 
 //Importamos datos de prueba
-let cursos = require('./cursos');
+// let cursos = require('./cursos');
+// let productos = require('./productos');
 
+const productoTypeDefs = require('./types/producto.types')
+const productoResolvers = require('./resolvers/producto.resolvers');
 
 //Definición de estructuras graphql
 const typeDefs = `
-    type Curso{
-        id: ID!
-        titulo: String!
-        visitas: Int
+    type Alert{
+        message: String
     }
 
-    input CursoInput{
-        titulo: String!
-        visitas: Int
+    type Query{
+        _ : Boolean
     }
-
-    type Query {
-        getCursos (page: Int, limit: Int = 1): [Curso]
-    }    
 
     type Mutation{
-        addCurso(input: CursoInput): Curso
+        _ : Boolean
     }
 `;
 
+const resolver = {};
+
 //La asignación de definiciones y metodos de resolución
 const schema = makeExecutableSchema({
-    typeDefs: typeDefs,
-    resolvers: {
-        Query:{
-            //La definición de metodos de consultas es método(obj, { params ... } )
-            getCursos(obj, { page, limit }){
-                if (page !== undefined){
-                    return cursos.slice((page - 1) * limit, (page)*limit);
-                }
-                return cursos;
-            }
-        },
-        Mutation:{
-            //La definición de metodos de mutaciones es método(obj, { params ... })
-            addCurso(obj, { input }){
-                const id = String(cursos.length + 1);
-
-                //Spread operator: Toma todos los parametros internos de input
-                const curso = { id, ...input}
-
-                cursos.push(curso);
-
-                return curso;
-            }
-        }
-    }
+    typeDefs: [typeDefs, productoTypeDefs],
+    resolvers: merge(resolver, productoResolvers)
 });
 
 //Asignación de definiciones y metodos de resolución
