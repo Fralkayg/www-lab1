@@ -1,6 +1,6 @@
 # Query - Mutation
 
-
+```js
 query Query($getProdId: ID!) {
   getProd(id: $getProdId) {
     idProducto
@@ -25,7 +25,6 @@ mutation AddProdMutation($addProdInput: ProductoInput) {
 }
 
 
-
 mutation UpdProdMutation($updProdId: ID!, $updProdInput: ProductoInput) {
   updProd(id: $updProdId, input: $updProdInput) {
     idProducto
@@ -41,9 +40,10 @@ mutation DelProdMutation($delProdId: ID!) {
     message
   }
 }
+```
 
 # Variables
-
+```json
 {
   "getProdId": "3",
   "addProdInput": {
@@ -59,3 +59,4 @@ mutation DelProdMutation($delProdId: ID!) {
   },
   "delProdId": "6"
 }
+```
