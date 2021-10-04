@@ -11,6 +11,12 @@ const { merge } = require('lodash');
 const productoTypeDefs = require('./types/producto.types')
 const productoResolvers = require('./resolvers/producto.resolvers');
 
+const detalleVentaTypeDefs = require('./types/detalleVenta.types');
+const detalleVentaResolvers = require('./resolvers/detalleVenta.resolvers');
+
+const ventaTypeDefs = require('./types/venta.types');
+const ventaResolvers = require('./resolvers/venta.resolvers');
+
 //Definición de estructuras graphql
 const typeDefs = `
     type Alert{
@@ -30,10 +36,11 @@ const resolver = {};
 
 //La asignación de definiciones y metodos de resolución
 const schema = makeExecutableSchema({
-    typeDefs: [typeDefs, productoTypeDefs],
+    typeDefs: [typeDefs, productoTypeDefs, detalleVentaTypeDefs, ventaTypeDefs],
     resolvers: merge(resolver, productoResolvers)
 });
-
+// , detalleVentaTypeDefs, ventaTypeDefs
+// , detalleVentaResolvers, ventaResolvers
 //Asignación de definiciones y metodos de resolución
 const server = new ApolloServer({
     schema: schema
