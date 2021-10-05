@@ -1,9 +1,9 @@
 //todo
 const detalleVentaResolvers = require('../resolvers/detalleVenta.resolvers');
 let ventas = require("../ventas");
-let detalleVentas = require("../detalleVentas")
+let detalleVentas = require("../detalleVentas");
 
-module.exports = {
+module.exports = {    
     Query:{
         buscarVenta(obj, { idVenta }){
             const venta = ventas.find( (venta) => venta.idVenta == idVenta);
@@ -15,10 +15,11 @@ module.exports = {
         },
         calculoTotal(obj, { idVenta }){
             let total = 0;
-            detalleVenta = this.buscarDetalle(obj, idVenta);
+
+            const detalleVenta = this.buscarDetalle(obj, { "idVenta": idVenta });
 
             detalleVenta.forEach( (detalle) => {
-                const producto = detalleVentaResolvers.Query.buscarProducto(detalle.idProducto);
+                const producto = detalleVentaResolvers.Query.buscarProducto(obj, { id: detalle.idProducto});
                 
                 const costo = producto.valor * detalle.cantidad;
 
@@ -33,16 +34,20 @@ module.exports = {
 
             input.detalleVentas.forEach( (detalle) => {
                 detalle.idVenta = idVenta;
-                detalleVentaResolvers.Mutation.addDetalle(obj, detalle);
+                detalleVentaResolvers.Mutation.addDetalle(obj, { input: {
+                    "cantidad": detalle.cantidad,
+                    "idProducto": detalle.idProducto,
+                    "idVenta": detalle.idVenta
+                }});
             });
 
-            total = calculoTotal(obj, idVenta);
+            const total = calculoTotal(obj, { idVenta: idVenta});
 
             const venta = { idVenta, total, ...input };
 
             ventas.push(venta);
             
-            return venta;
+            return { message: `Se agrego una nueva venta con ID ${idVenta}`};
         },
         updVenta(obj, { id, input}){
             const indice = ventas.findIndex( (venta) => venta.idVenta == id);
@@ -53,11 +58,11 @@ module.exports = {
                 const venta = ventas[indice];
 
                 input.detalleVentas.forEach( (detalle) => {
-                    const result = detalleVentaResolvers.updDetalle(obj, detalle.idDetalle, {
+                    const result = detalleVentaResolvers.Mutation.updDetalle(obj, detalle.idDetalle, { input: {
                             "idVenta": detalle.idVenta,
                             "idProducto": detalle.idProducto,
                             "cantidad": detalle.cantidad
-                    });
+                    }});
                     console.log(result);
                 });
 
@@ -82,7 +87,7 @@ module.exports = {
                 detalleVentas = this.buscarDetalle(obj, idVenta);
 
                 detalleVentas.forEach( (detalle) => {
-                    detalleVentaResolvers.delDetalle(obj, detalle.idDetalle);
+                    detalleVentaResolvers.Mutation.delDetalle(obj, { id: detalle.idDetalle });
                 });
 
                 ventas = ventas.filter( (venta) => venta.idVenta != id);

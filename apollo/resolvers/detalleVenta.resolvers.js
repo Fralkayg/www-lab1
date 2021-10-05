@@ -5,7 +5,9 @@ let productos = require("../productos");
 
 module.exports = {
     Query:{
-        buscarProducto(obj, { id }){       
+        buscarProducto(obj, { id }){    
+            console.log("id");
+            console.log(id);   
             return productos.find( (producto) => id == producto.idProducto);
         }
     },
@@ -42,8 +44,8 @@ module.exports = {
             if (isOk){
                 const detalleVenta = detalleVentas[indice];
 
-                let productoAntiguo = buscarProducto(detalleVenta.idProducto);
-                let productoNuevo = buscarProducto(input.idProducto);
+                let productoAntiguo = productoResolvers.Query.buscarProducto(detalleVenta.idProducto);
+                let productoNuevo = productoResolvers.Query.buscarProducto(input.idProducto);
 
                 if (input.cantidad < productoNuevo.stock){
                     //se puede hacer el cambio
@@ -80,7 +82,7 @@ module.exports = {
             if (isOk){
                 const detalleVenta = detalleVentas[indice];
 
-                let productoAntiguo = buscarProducto(detalleVenta.idProducto);
+                let productoAntiguo = productoResolvers.Query.buscarProducto(detalleVenta.idProducto);
 
                 productoAntiguo = updProd(productoAntiguo.idProducto, { 
                     "descripcion": productoAntiguo.descripcion,
