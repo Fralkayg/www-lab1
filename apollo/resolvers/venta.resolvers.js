@@ -57,13 +57,14 @@ module.exports = {
             if (isOk){
                 const venta = ventas[indice];
 
-                input.detalleVentas.forEach( (detalle) => {
-                    const result = detalleVentaResolvers.Mutation.updDetalle(obj, detalle.idDetalle, { input: {
+                detalleVentas = detalleVentas.filter((detalle) => detalle.idVenta != id);
+
+                input.detalleVentas.forEach((detalle) => {
+                    const result = detalleVentaResolvers.Mutation.addDetalle(obj, detalle.idDetalle, { input: {
                             "idVenta": detalle.idVenta,
                             "idProducto": detalle.idProducto,
                             "cantidad": detalle.cantidad
                     }});
-                    console.log(result);
                 });
 
                 const nuevoTotal = calculoTotal(obj, id);
