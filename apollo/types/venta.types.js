@@ -12,14 +12,13 @@ module.exports = `
 
     input VentaInput{
         fechaVenta: String!
-        total: Int!
-        detalleVenta: [DetalleVentaInput]
+        detalleVentas: [DetalleVentaInput]
     }
 
     extend type Query{
         buscarVenta(idVenta: ID!): Venta
         buscarDetalle(idVenta: ID!): [DetalleVenta]
-        calculoTotal: Int
+        calculoTotal(idVenta: ID!): Int
     }
 
     extend type Mutation{

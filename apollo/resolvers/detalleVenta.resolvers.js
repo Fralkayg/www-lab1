@@ -37,7 +37,7 @@ module.exports = {
         updDetalle(obj, { id, input }){
             const indice = detalleVentas.findIndex( (detalleVenta) => detalleVenta.idDetalle == id);
 
-            const isOk = (indiceProducto == -1)? false: true;
+            const isOk = (indice == -1)? false: true;
 
             if (isOk){
                 const detalleVenta = detalleVentas[indice];
@@ -72,10 +72,10 @@ module.exports = {
                 return { message: `No se puede actualizar el detalle de venta con ID: ${id} debido a que no se encontró el detalle de venta.` };
             }
         },
-        delDetalle(obj, { input }){
+        delDetalle(obj, id){
             const indice = detalleVentas.findIndex( (detalleVenta) => detalleVenta.idDetalle == id);
 
-            const isOk = (indiceProducto == -1)? false: true;
+            const isOk = (indice == -1)? false: true;
 
             if (isOk){
                 const detalleVenta = detalleVentas[indice];
@@ -85,12 +85,12 @@ module.exports = {
                 productoAntiguo = updProd(productoAntiguo.idProducto, { 
                     "descripcion": productoAntiguo.descripcion,
                     "valor": productoAntiguo.valor,
-                    "stock": productoAntiguo.stock + detalleVenta.stock });
+                    "stock": productoAntiguo.stock + detalleVenta.cantidad });
                 
                 detalleVentas = detalleVentas.filter( (detalleVenta) => detalleVenta.idDetalle != id);
                 return { message: `Se elimino el detalle de venta con id ${id}.` };
             }else{
-                return { message: `No se puede actualizar el detalle de venta con ID: ${id} debido a que no se encontró el detalle de venta.` };
+                return { message: `No se pudo eliminar el detalle de venta con ID: ${id} debido a que no se encontró el detalle de venta.` };
             }
         }
     }

@@ -1,9 +1,7 @@
 //todo
-const productoResolvers = require('../resolvers/producto.resolvers');
 const detalleVentaResolvers = require('../resolvers/detalleVenta.resolvers');
 let ventas = require("../ventas");
 let detalleVentas = require("../detalleVentas")
-let productos = require("../productos");
 
 module.exports = {
     Query:{
@@ -12,46 +10,87 @@ module.exports = {
 
             return venta;
         },
-        buscarDetalle(obj, { idVenta}){
+        buscarDetalle(obj, { idVenta }){
             return detalleVentas.filter( (detalle) => detalle.idVenta == idVenta);
+        },
+        calculoTotal(obj, { idVenta }){
+            let total = 0;
+            detalleVenta = this.buscarDetalle(obj, idVenta);
+
+            detalleVenta.forEach( (detalle) => {
+                const producto = detalleVentaResolvers.buscarProducto(detalle.idProducto);
+
+                const costo = producto.valor * detalle.cantidad;
+
+                total += costo;
+            });
+            return total;
         }
     },
     Mutation: {
         addVenta(obj, { input }){
+            const idVenta = String(ventas.length + 1);
 
+            input.detalleVentas.forEach( (detalle) => {
+                detalle.idVenta = idVenta;
+                detalleVentaResolvers.addDetalle(obj, detalle);
+            });
+
+            total = calculoTotal(obj, idVenta);
+
+            const venta = { idVenta, total, ...input };
+
+            ventas.push(venta);
+            
+            return venta;
         },
-        updVenta(obj, { input}){
+        updVenta(obj, { id, input}){
+            const indice = ventas.findIndex( (venta) => venta.idVenta == id);
 
+            const isOk = (indice == -1)? false:true;
+
+            if (isOk){
+                const venta = ventas[indice];
+
+                input.detalleVentas.forEach( (detalle) => {
+                    const result = detalleVentaResolvers.updDetalle(obj, detalle.idDetalle, {
+                            "idVenta": detalle.idVenta,
+                            "idProducto": detalle.idProducto,
+                            "cantidad": detalle.cantidad
+                    });
+                    console.log(result);
+                });
+
+                const nuevoTotal = calculoTotal(obj, id);
+
+                input.total = nuevoTotal;
+                
+                const ventaActualizado = Object.assign(venta, {id, ...input});
+
+                ventas[indice] = ventaActualizado;
+                return { message: `Se actualizo la venta con ID: ${id}` };
+            }else{
+                return { message: `No se puede actualizar la venta con ID: ${id} debido a que no se encontró la venta.` };
+            }            
         },
-        delVenta(obj, { input}){
+        delVenta(obj, id){
+            const indice = ventas.findIndex( (venta) => venta.idVenta == id);
 
+            const isOk = (indice == -1)? false:true;
+
+            if (isOk){
+                detalleVentas = this.buscarDetalle(obj, idVenta);
+
+                detalleVentas.forEach( (detalle) => {
+                    detalleVentaResolvers.delDetalle(obj, detalle.idDetalle);
+                });
+
+                ventas = ventas.filter( (venta) => venta.idVenta != id);
+
+                return { message: `Se elimino la venta con id ${id}.` };
+            }else{
+                return { message: `No se pudo eliminar la venta con ID: ${id} debido a que no se encontró la venta.` };
+            }
         },
-
-        // addProd(obj, { input }){
-        //     const idProducto = String(productos.length + 1);
-
-        //     const producto = { idProducto, ...input };
-
-        //     productos.push(producto);
-
-        //     return producto;
-        // },
-        // updProd(obj, { id, input}){
-        //     const indice = productos.findIndex( (producto) => producto.idProducto == id);
-
-        //     const producto = productos[indice];
-
-        //     const nuevoProducto = Object.assign(producto, { id, ...input });
-
-        //     productos[indice] = nuevoProducto;
-
-        //     return nuevoProducto;
-        // },
-        // delProd(obj, { id }){
-        //     productos = productos.filter( (producto) => producto.idProducto != id);
-        //     return{
-        //         message: `Se elimino el curso con id ${id}.`
-        //     }
-        // }
     }
 }
