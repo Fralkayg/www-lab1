@@ -18,8 +18,8 @@ module.exports = {
             detalleVenta = this.buscarDetalle(obj, idVenta);
 
             detalleVenta.forEach( (detalle) => {
-                const producto = detalleVentaResolvers.buscarProducto(detalle.idProducto);
-
+                const producto = detalleVentaResolvers.Query.buscarProducto(detalle.idProducto);
+                
                 const costo = producto.valor * detalle.cantidad;
 
                 total += costo;
@@ -33,7 +33,7 @@ module.exports = {
 
             input.detalleVentas.forEach( (detalle) => {
                 detalle.idVenta = idVenta;
-                detalleVentaResolvers.addDetalle(obj, detalle);
+                detalleVentaResolvers.Mutation.addDetalle(obj, detalle);
             });
 
             total = calculoTotal(obj, idVenta);
