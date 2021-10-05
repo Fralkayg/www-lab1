@@ -37,10 +37,9 @@ const resolver = {};
 //La asignación de definiciones y metodos de resolución
 const schema = makeExecutableSchema({
     typeDefs: [typeDefs, productoTypeDefs, detalleVentaTypeDefs, ventaTypeDefs],
-    resolvers: merge(resolver, productoResolvers)
+    resolvers: merge(resolver, productoResolvers, detalleVentaResolvers, ventaResolvers)
 });
-// , detalleVentaTypeDefs, ventaTypeDefs
-// , detalleVentaResolvers, ventaResolvers
+
 //Asignación de definiciones y metodos de resolución
 const server = new ApolloServer({
     schema: schema

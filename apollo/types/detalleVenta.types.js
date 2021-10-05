@@ -13,7 +13,7 @@ module.exports = `
     input DetalleVentaInput{
         cantidad: Int!
         idProducto: String!
-        idDetalle: String!
+        idVenta: String!
     }
 
     extend type Query{
@@ -21,8 +21,8 @@ module.exports = `
     }
 
     extend type Mutation{
-        addDetalle(input: DetalleVentaInput): DetalleVenta
-        updDetalle(id: ID!, input: DetalleVentaInput): DetalleVenta
+        addDetalle(input: DetalleVentaInput): Alert
+        updDetalle(id: ID!, input: DetalleVentaInput): Alert
         delDetalle(id: ID!): Alert
     }
 `

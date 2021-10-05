@@ -25,6 +25,6 @@ module.exports = `
     extend type Mutation{
         addVenta(input: VentaInput): Venta
         updVenta(id: ID!, input: VentaInput): Venta
-        delVent(id: ID!): Alert
+        delVenta(id: ID!): Alert
     }
 `
