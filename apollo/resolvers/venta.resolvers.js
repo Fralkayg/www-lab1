@@ -29,6 +29,24 @@ module.exports = {
         }
     },
     Mutation: {
+        //fix para poder usar las funciones del contexto de query
+        buscarDetalle(obj, { idVenta }){
+            return detalleVentas.filter( (detalle) => detalle.idVenta == idVenta);
+        },
+        calculoTotal(obj, { idVenta }){
+            let total = 0;
+
+            const detalleVenta = this.buscarDetalle(obj, { "idVenta": idVenta });
+
+            detalleVenta.forEach( (detalle) => {
+                const producto = detalleVentaResolvers.Query.buscarProducto(obj, { id: detalle.idProducto});
+                
+                const costo = producto.valor * detalle.cantidad;
+
+                total += costo;
+            });
+            return total;
+        },
         addVenta(obj, { input }){
             const idVenta = String(ventas.length + 1);
 
@@ -41,7 +59,7 @@ module.exports = {
                 }});
             });
 
-            const total = calculoTotal(obj, { idVenta: idVenta});
+            const total = this.calculoTotal(obj, { idVenta: idVenta});
 
             const venta = { idVenta, total, ...input };
 
@@ -67,7 +85,7 @@ module.exports = {
                     }});
                 });
 
-                const nuevoTotal = calculoTotal(obj, id);
+                const nuevoTotal = this.calculoTotal(obj, id);
 
                 input.total = nuevoTotal;
                 
