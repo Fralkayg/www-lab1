@@ -13,6 +13,7 @@ module.exports = {
     },
     Mutation: {
         addDetalle(obj, { input }){
+            console.log(input);
             const indiceProducto = productos.findIndex( (producto) => input.idProducto == producto.idProducto);
             
             const isOk = (indiceProducto == -1)? false: true;

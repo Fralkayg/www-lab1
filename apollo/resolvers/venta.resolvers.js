@@ -52,6 +52,7 @@ module.exports = {
         },
         updVenta(obj, { id, input}){
             const indice = ventas.findIndex( (venta) => venta.idVenta == id);
+            console.log(input.total);
 
             const isOk = (indice == -1)? false:true;
 
@@ -59,20 +60,26 @@ module.exports = {
                 const venta = ventas[indice];
 
                 detalleVentas = detalleVentas.filter((detalle) => detalle.idVenta != id);
+                console.log(input);
+                console.log(input.detalleVenta);
 
-                input.detalleVentas.forEach((detalle) => {
+                input.detalleVenta.forEach((detalle) => {
+                    console.log(detalle);
                     const result = detalleVentaResolvers.Mutation.addDetalle(obj, detalle.idDetalle, { input: {
                             "idVenta": detalle.idVenta,
                             "idProducto": detalle.idProducto,
                             "cantidad": detalle.cantidad
                     }});
+                    detalle.idDetalle = result.id;
                 });
 
                 const nuevoTotal = this.calculoTotal(obj, { idVenta: id });
 
-                input.total = nuevoTotal;
+                venta.total = nuevoTotal;
                 
                 const ventaActualizado = Object.assign(venta, {id, ...input});
+                console.log("AAAA");
+                console.log(ventaActualizado);
 
                 ventas[indice] = ventaActualizado;
                 return { message: `Se actualizo la venta con ID: ${id}` };
