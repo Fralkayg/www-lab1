@@ -8,8 +8,12 @@ module.exports = {
         buscarVenta(obj, { idVenta }){
             const venta = ventas.find( (venta) => venta.idVenta == idVenta);
 
+            console.log(venta);
+
             return venta;
-        },
+        }
+    },
+    Mutation: {
         buscarDetalle(obj, { idVenta }){
             return detalleVentas.filter( (detalle) => detalle.idVenta == idVenta);
         },
@@ -26,9 +30,7 @@ module.exports = {
                 total += costo;
             });
             return total;
-        }
-    },
-    Mutation: {
+        },
         addVenta(obj, { input }){
             const idVenta = String(ventas.length + 1);
 
@@ -41,19 +43,11 @@ module.exports = {
                 }});
             });
 
-            let total = 0;
-
-            const detalleVenta = detalleVentas.filter( (detalle) => detalle.idVenta == idVenta);
-
-            detalleVenta.forEach( (detalle) => {
-                const producto = detalleVentaResolvers.Query.buscarProducto(obj, { id: detalle.idProducto});
-                
-                const costo = producto.valor * detalle.cantidad;
-
-                total += costo;
-            });
+            let total = this.calculoTotal(obj, idVenta);
 
             const venta = { idVenta, total, ...input };
+
+            console.log(venta);
 
             ventas.push(venta);
             

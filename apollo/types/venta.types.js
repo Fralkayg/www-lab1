@@ -17,11 +17,11 @@ module.exports = `
 
     extend type Query{
         buscarVenta(idVenta: ID!): Venta
-        buscarDetalle(idVenta: ID!): [DetalleVenta]
-        calculoTotal(idVenta: ID!): Int
     }
 
     extend type Mutation{
+        buscarDetalle(idVenta: ID!): [DetalleVenta]
+        calculoTotal(idVenta: ID!): Int
         addVenta(input: VentaInput): Alert
         updVenta(id: ID!, input: VentaInput): Alert
         delVenta(id: ID!): Alert

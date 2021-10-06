@@ -1,6 +1,6 @@
 module.exports = `
     type DetalleVenta{
-        idVenta: ID!
+        idVenta: ID
         cantidad: String
         idProducto: String
         idDetalle: String
@@ -13,7 +13,7 @@ module.exports = `
     input DetalleVentaInput{
         cantidad: Int!
         idProducto: String!
-        idVenta: String!
+        idVenta: String
     }
 
     extend type Query{
