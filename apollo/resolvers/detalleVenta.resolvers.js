@@ -72,7 +72,7 @@ module.exports = {
 
                     detalleVentas[indice] = detalleActualizado;
 
-                    ventaResolvers.Mutation.actualizarTotal(obj, { id: detalleVenta.idVenta });
+                    // ventaResolvers.Mutation.actualizarTotal(obj, { id: detalleVenta.idVenta });
 
                     //calcular el total nuevamente
 
