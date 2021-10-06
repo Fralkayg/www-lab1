@@ -8,8 +8,6 @@ module.exports = {
         buscarVenta(obj, { idVenta }){
             const venta = ventas.find( (venta) => venta.idVenta == idVenta);
 
-            console.log(venta);
-
             return venta;
         }
     },
@@ -34,20 +32,19 @@ module.exports = {
         addVenta(obj, { input }){
             const idVenta = String(ventas.length + 1);
 
-            input.detalleVentas.forEach( (detalle) => {
+            input.detalleVenta.forEach( (detalle) => {
                 detalle.idVenta = idVenta;
-                detalleVentaResolvers.Mutation.addDetalle(obj, { input: {
+                const result = detalleVentaResolvers.Mutation.addDetalle(obj, { input: {
                     "cantidad": detalle.cantidad,
                     "idProducto": detalle.idProducto,
                     "idVenta": detalle.idVenta
                 }});
+                detalle.idDetalle = result.id;
             });
 
-            let total = this.calculoTotal(obj, idVenta);
+            let total = this.calculoTotal(obj, { idVenta: idVenta });
 
             const venta = { idVenta, total, ...input };
-
-            console.log(venta);
 
             ventas.push(venta);
             
@@ -71,7 +68,7 @@ module.exports = {
                     }});
                 });
 
-                const nuevoTotal = this.calculoTotal(obj, id);
+                const nuevoTotal = this.calculoTotal(obj, { idVenta: id });
 
                 input.total = nuevoTotal;
                 

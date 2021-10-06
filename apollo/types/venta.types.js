@@ -12,7 +12,7 @@ module.exports = `
 
     input VentaInput{
         fechaVenta: String!
-        detalleVentas: [DetalleVentaInput]
+        detalleVenta: [DetalleVentaInput]
     }
 
     extend type Query{

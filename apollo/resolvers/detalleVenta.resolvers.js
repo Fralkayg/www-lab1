@@ -1,8 +1,7 @@
 //todo
 let detalleVentas = require("../detalleVentas");
 let productos = require("../productos");
-let productoResolvers = require("../resolvers/producto.resolvers")
-
+let productoResolvers = require('../resolvers/producto.resolvers');
 
 module.exports = {
     Query:{
@@ -29,7 +28,7 @@ module.exports = {
                     const detalle = {idDetalle, ...input};
 
                     detalleVentas.push(detalle);
-                    return { message: `Se agrego el nuevo detalle de venta con ID ${idDetalle}` };
+                    return { message: `Se agrego el nuevo detalle de venta con ID ${idDetalle}`, id: idDetalle, id: idDetalle };
                 }else{
                     return { message: `No hay suficiente stock del producto con ID ${input.idProducto}` };
                 }
@@ -45,21 +44,21 @@ module.exports = {
             if (isOk){
                 const detalleVenta = detalleVentas[indice];
 
-                let productoAntiguo = productoResolvers.Query.getProd(obj, { id: detalleVenta.idProducto });
-                let productoNuevo = productoResolvers.Query.getProd(obj, { id: input.idProducto });
+                let productoAntiguo = productoResolvers.Query.buscarProducto(detalleVenta.idProducto);
+                let productoNuevo = productoResolvers.Query.buscarProducto(input.idProducto);
 
                 if (input.cantidad < productoNuevo.stock){
                     //se puede hacer el cambio
-                    productoAntiguo = productoResolvers.Mutation.updProd(obj, {id: productoAntiguo.idProducto, input: { 
+                    productoAntiguo = updProd(productoAntiguo.idProducto, { 
                         "descripcion": productoAntiguo.descripcion,
                         "valor": productoAntiguo.valor,
-                        "stock": productoAntiguo.stock + detalleVenta.stock }});
+                        "stock": productoAntiguo.stock + detalleVenta.stock });
                     
-                    productoNuevo = productoResolvers.Mutation.updProd(obj, {id: productoNuevo.idProducto, input: {
+                    productoNuevo = updProd(productoNuevo.idProducto, {
                         "descripcion": productoNuevo.descripcion,
                         "valor": productoNuevo.valor,
                         "stock": productoNuevo.stock - input.cantidad
-                    }});
+                    });
 
                     const detalleActualizado = Object.assign(detalleVenta, { id, ...input});
 
@@ -75,20 +74,20 @@ module.exports = {
                 return { message: `No se puede actualizar el detalle de venta con ID: ${id} debido a que no se encontró el detalle de venta.` };
             }
         },
-        delDetalle(obj, {id}){
+        delDetalle(obj, id){
             const indice = detalleVentas.findIndex( (detalleVenta) => detalleVenta.idDetalle == id);
-            
+
             const isOk = (indice == -1)? false: true;
 
             if (isOk){
                 const detalleVenta = detalleVentas[indice];
 
-                let productoAntiguo = productoResolvers.Query.getProd(obj, {id: detalleVenta.idProducto});
+                let productoAntiguo = productoResolvers.Query.buscarProducto(detalleVenta.idProducto);
 
-                productoAntiguo = productoResolvers.Mutation.updProd(obj, {id: productoAntiguo.idProducto, input: { 
+                productoAntiguo = updProd(productoAntiguo.idProducto, { 
                     "descripcion": productoAntiguo.descripcion,
                     "valor": productoAntiguo.valor,
-                    "stock": productoAntiguo.stock + detalleVenta.cantidad }});
+                    "stock": productoAntiguo.stock + detalleVenta.cantidad });
                 
                 detalleVentas = detalleVentas.filter( (detalleVenta) => detalleVenta.idDetalle != id);
                 return { message: `Se elimino el detalle de venta con id ${id}.` };
