@@ -1,6 +1,6 @@
-const { isNil } = require("lodash");
 let detalleVentas = require("../detalleVentas");
 let productoResolvers = require('../resolvers/producto.resolvers');
+const ventaResolvers = require("./venta.resolvers");
 
 module.exports = {
     Mutation: {
@@ -65,6 +65,17 @@ module.exports = {
                     detalleVentas[indice] = detalleActualizado;
 
                     //calcular el total nuevamente
+
+                    venta = ventaResolvers.Query.buscarVenta(obj, { idVenta: detalleActualizado.idVenta });
+
+                    let detalles = ventas.filter( (detalle) => detalle.idDetalle != detalleActualizado.idDetalle);
+
+                    detalles.push(detalleActualizado);
+
+                    ventaResolvers.Mutation.updVenta(obj, { id: detalleActualizado.idVenta, input: {
+                        fechaVenta: venta.fechaVenta,
+                        detalleVenta: detalles
+                    }});
 
                     return { message: `Se actualizo el detalle de venta con ID: ${id}` };
                 }else{
