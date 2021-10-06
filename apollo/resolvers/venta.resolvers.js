@@ -1,25 +1,24 @@
-//todo
 const detalleVentaResolvers = require('../resolvers/detalleVenta.resolvers');
 let ventas = require("../ventas");
 const productoResolvers = require('./producto.resolvers');
-// let detalleVentas = require("../detalleVentas");
+
+let detalleVentas = require("../detalleVentas");
 
 module.exports = {    
     Query:{
         buscarVenta(obj, { idVenta }){
             const venta = ventas.find( (venta) => venta.idVenta == idVenta);
-
             return venta;
         }
     },
     Mutation: {
-        // buscarDetalle(obj, { idVenta }){
-        //     return detalleVentas.filter( (detalle) => detalle.idVenta == idVenta);
-        // },
+        buscarDetalle(obj, { idVenta }){
+            return detalleVentas.filter( (detalle) => detalle.idVenta == idVenta);
+        },
         calculoTotal(obj, { idVenta }){
             let total = 0;
 
-            const detalleVenta = detalleVentaResolvers.Query.buscarDetalle(obj, { idVenta: idVenta });
+            const detalleVenta = this.buscarDetalle(obj, { idVenta: idVenta });
 
             detalleVenta.forEach( (detalle) => {
                 const producto = productoResolvers.Query.getProd(obj, { id: detalle.idProducto});
@@ -59,7 +58,7 @@ module.exports = {
             if (isOk){
                 const venta = ventas[indice];
 
-                let detalles = detalleVentaResolvers.Query.buscarDetalle(obj, { idVenta: id });
+                let detalles = this.buscarDetalle(obj, { idVenta: id });
 
                 detalles.forEach( (detalle) => {
                     detalleVentaResolvers.Mutation.delDetalle(obj, { id: detalle.idDetalle });
@@ -92,7 +91,7 @@ module.exports = {
             const isOk = (indice == -1)? false:true;
 
             if (isOk){
-                detalles = detalleVentaResolvers.Query.buscarDetalle(obj, { idVenta: idVenta});
+                detalles = this.buscarDetalle(obj, { idVenta: idVenta});
 
                 detalles.forEach( (detalle) => {
                     detalleVentaResolvers.Mutation.delDetalle(obj, { id: detalle.idDetalle });

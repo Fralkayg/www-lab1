@@ -3,10 +3,12 @@ let productoResolvers = require('../resolvers/producto.resolvers');
 const ventaResolvers = require("./venta.resolvers");
 
 module.exports = {
-    Mutation: {
+    Query:{
         buscarDetalle(obj, { idVenta }){
             return detalleVentas.filter( (detalle) => detalle.idVenta == idVenta);
         },
+    },
+    Mutation: {
         addDetalle(obj, { input }){
             let venta = ventaResolvers.Query.buscarVenta(obj, { idVenta: input.idVenta });
 
@@ -71,21 +73,6 @@ module.exports = {
                     const detalleActualizado = Object.assign(detalleVenta, { ...input});
 
                     detalleVentas[indice] = detalleActualizado;
-
-                    // ventaResolvers.Mutation.actualizarTotal(obj, { id: detalleVenta.idVenta });
-
-                    //calcular el total nuevamente
-
-                    // const venta = ventaResolvers.Query.buscarVenta(obj, { idVenta: detalleVenta.idVenta });
-
-                    // let detalles = venta.detalleVenta.filter( (detalle) => detalle.idDetalle != detalleActualizado.idDetalle);
-
-                    // detalles.push(detalleActualizado);
-
-                    // ventaResolvers.Mutation.updVenta(obj, { id: detalleActualizado.idVenta, input: {
-                    //     fechaVenta: venta.fechaVenta,
-                    //     detalleVenta: detalles
-                    // }});
 
                     return { message: `Se actualizo el detalle de venta con ID: ${id}` };
                 }else{
