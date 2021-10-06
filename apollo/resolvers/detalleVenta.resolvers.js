@@ -6,18 +6,18 @@ let productoResolvers = require('../resolvers/producto.resolvers');
 module.exports = {
     Query:{
         buscarProducto(obj, { id }){    
-            console.log("id");
-            console.log(id);   
             return productos.find( (producto) => id == producto.idProducto);
         }
     },
     Mutation: {
+        buscarDetalle(obj, { idVenta }){
+            return detalleVentas.filter( (detalle) => detalle.idVenta == idVenta);
+        },
         addDetalle(obj, { input }){
-            console.log(input);
             const indiceProducto = productos.findIndex( (producto) => input.idProducto == producto.idProducto);
             
             const isOk = (indiceProducto == -1)? false: true;
-
+            
             if (isOk){
                 let producto = productos[indiceProducto];
                 if (producto.stock > input.cantidad){
@@ -29,6 +29,7 @@ module.exports = {
                     const detalle = {idDetalle, ...input};
 
                     detalleVentas.push(detalle);
+
                     return { message: `Se agrego el nuevo detalle de venta con ID ${idDetalle}`, id: idDetalle, id: idDetalle };
                 }else{
                     return { message: `No hay suficiente stock del producto con ID ${input.idProducto}` };
@@ -91,6 +92,7 @@ module.exports = {
                     "stock": productoAntiguo.stock + detalleVenta.cantidad }});
                 
                 detalleVentas = detalleVentas.filter( (detalleVenta) => detalleVenta.idDetalle != id);
+
                 return { message: `Se elimino el detalle de venta con id ${id}.` };
             }else{
                 return { message: `No se pudo eliminar el detalle de venta con ID: ${id} debido a que no se encontró el detalle de venta.` };
