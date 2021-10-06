@@ -29,24 +29,6 @@ module.exports = {
         }
     },
     Mutation: {
-        //fix para poder usar las funciones del contexto de query
-        buscarDetalle(obj, { idVenta }){
-            return detalleVentas.filter( (detalle) => detalle.idVenta == idVenta);
-        },
-        calculoTotal(obj, { idVenta }){
-            let total = 0;
-
-            const detalleVenta = this.buscarDetalle(obj, { "idVenta": idVenta });
-
-            detalleVenta.forEach( (detalle) => {
-                const producto = detalleVentaResolvers.Query.buscarProducto(obj, { id: detalle.idProducto});
-                
-                const costo = producto.valor * detalle.cantidad;
-
-                total += costo;
-            });
-            return total;
-        },
         addVenta(obj, { input }){
             const idVenta = String(ventas.length + 1);
 
@@ -59,7 +41,17 @@ module.exports = {
                 }});
             });
 
-            const total = this.calculoTotal(obj, { idVenta: idVenta});
+            let total = 0;
+
+            const detalleVenta = detalleVentas.filter( (detalle) => detalle.idVenta == idVenta);
+
+            detalleVenta.forEach( (detalle) => {
+                const producto = detalleVentaResolvers.Query.buscarProducto(obj, { id: detalle.idProducto});
+                
+                const costo = producto.valor * detalle.cantidad;
+
+                total += costo;
+            });
 
             const venta = { idVenta, total, ...input };
 
@@ -103,7 +95,7 @@ module.exports = {
             const isOk = (indice == -1)? false:true;
 
             if (isOk){
-                detalleVentas = this.buscarDetalle(obj, idVenta);
+                detalleVentas = detalleVentas.filter( (detalle) => detalle.idVenta == idVenta);
 
                 detalleVentas.forEach( (detalle) => {
                     detalleVentaResolvers.Mutation.delDetalle(obj, { id: detalle.idDetalle });
