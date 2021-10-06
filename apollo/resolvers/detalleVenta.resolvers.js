@@ -44,21 +44,21 @@ module.exports = {
             if (isOk){
                 const detalleVenta = detalleVentas[indice];
 
-                let productoAntiguo = productoResolvers.Query.buscarProducto(detalleVenta.idProducto);
-                let productoNuevo = productoResolvers.Query.buscarProducto(input.idProducto);
+                let productoAntiguo = productoResolvers.Query.getProd(obj, { id: detalleVenta.idProducto });
+                let productoNuevo = productoResolvers.Query.getProd(obj, { id: input.idProducto });
 
                 if (input.cantidad < productoNuevo.stock){
                     //se puede hacer el cambio
-                    productoAntiguo = updProd(productoAntiguo.idProducto, { 
+                    productoAntiguo = productoResolvers.Mutation.updProd(obj, {id: productoAntiguo.idProducto, input: { 
                         "descripcion": productoAntiguo.descripcion,
                         "valor": productoAntiguo.valor,
-                        "stock": productoAntiguo.stock + detalleVenta.stock });
+                        "stock": productoAntiguo.stock + detalleVenta.stock }});
                     
-                    productoNuevo = updProd(productoNuevo.idProducto, {
+                    productoNuevo = productoResolvers.Mutation.updProd(obj, {id: productoNuevo.idProducto, input: {
                         "descripcion": productoNuevo.descripcion,
                         "valor": productoNuevo.valor,
                         "stock": productoNuevo.stock - input.cantidad
-                    });
+                    }});
 
                     const detalleActualizado = Object.assign(detalleVenta, { id, ...input});
 
@@ -74,7 +74,7 @@ module.exports = {
                 return { message: `No se puede actualizar el detalle de venta con ID: ${id} debido a que no se encontró el detalle de venta.` };
             }
         },
-        delDetalle(obj, id){
+        delDetalle(obj, { id }){
             const indice = detalleVentas.findIndex( (detalleVenta) => detalleVenta.idDetalle == id);
 
             const isOk = (indice == -1)? false: true;
@@ -82,12 +82,12 @@ module.exports = {
             if (isOk){
                 const detalleVenta = detalleVentas[indice];
 
-                let productoAntiguo = productoResolvers.Query.buscarProducto(detalleVenta.idProducto);
+                let productoAntiguo = productoResolvers.Query.getProd(obj, { id: detalleVenta.idProducto });
 
-                productoAntiguo = updProd(productoAntiguo.idProducto, { 
+                productoAntiguo = productoResolvers.Mutation.updProd(obj, {id: productoAntiguo.idProducto, input: { 
                     "descripcion": productoAntiguo.descripcion,
                     "valor": productoAntiguo.valor,
-                    "stock": productoAntiguo.stock + detalleVenta.cantidad });
+                    "stock": productoAntiguo.stock + detalleVenta.cantidad }});
                 
                 detalleVentas = detalleVentas.filter( (detalleVenta) => detalleVenta.idDetalle != id);
                 return { message: `Se elimino el detalle de venta con id ${id}.` };
