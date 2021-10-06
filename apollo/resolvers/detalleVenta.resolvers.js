@@ -3,14 +3,10 @@ let productoResolvers = require('../resolvers/producto.resolvers');
 const ventaResolvers = require("./venta.resolvers");
 
 module.exports = {
-    Query: {
+    Mutation: {
         buscarDetalle(obj, { idVenta }){
             return detalleVentas.filter( (detalle) => detalle.idVenta == idVenta);
-        }
-    },
-
-    Mutation: {
-        
+        },
         addDetalle(obj, { input }){
             let venta = ventaResolvers.Query.buscarVenta(obj, { idVenta: input.idVenta });
 
@@ -76,7 +72,7 @@ module.exports = {
 
                     detalleVentas[indice] = detalleActualizado;
 
-                    //ventaResolvers.Mutation.actualizarTotal(obj, { id: detalleVenta.idVenta });
+                    // ventaResolvers.Mutation.actualizarTotal(obj, { id: detalleVenta.idVenta });
 
                     //calcular el total nuevamente
 
