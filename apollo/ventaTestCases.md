@@ -1,24 +1,21 @@
 # Query - Mutation
 
 ```js
-query Query($buscarVentaIdVenta: ID!, $buscarDetalleIdVenta: ID!, $calculoTotalIdVenta: ID!) {
+query Query($buscarVentaIdVenta: ID!) {
   buscarVenta(idVenta: $buscarVentaIdVenta) {
+    idVenta
+    fechaVenta
+    total
     detalleVenta {
       idVenta
       cantidad
       idProducto
       idDetalle
     }
-    idVenta
-    fechaVenta
-    total
   }
-  buscarDetalle(idVenta: $buscarDetalleIdVenta) {
-    idVenta
-    cantidad
-    idProducto
-    idDetalle
-  }
+}
+
+mutation CalculoTotalMutation($calculoTotalIdVenta: ID!) {
   calculoTotal(idVenta: $calculoTotalIdVenta)
 }
 
@@ -28,8 +25,25 @@ mutation AddVentaMutation($addVentaInput: VentaInput) {
   }
 }
 
+
 mutation UpdVentaMutation($updVentaId: ID!, $updVentaInput: VentaInput) {
   updVenta(id: $updVentaId, input: $updVentaInput) {
+    message
+  }
+}
+
+
+
+mutation DelVentaMutation($delVentaId: ID!) {
+  delVenta(id: $delVentaId) {
+    message
+  }
+}
+
+
+
+mutation ActualizarTotalMutation($actualizarTotalIdVenta: ID!) {
+  actualizarTotal(idVenta: $actualizarTotalIdVenta) {
     message
   }
 }
@@ -39,54 +53,18 @@ mutation UpdVentaMutation($updVentaId: ID!, $updVentaInput: VentaInput) {
 ```json
 {
   "buscarVentaIdVenta": "1",
-  "buscarDetalleIdVenta": "2",
-  "calculoTotalIdVenta": "2",
-
-  "addVentaInput": {
-    "fechaVenta": "20/10/1999",
-    "detalleVentas":[
-      {
-        "idVenta": "3",
-        "cantidad": 2,
-        "idProducto": "3"
-      },
-      {
-        "idVenta": "3",
-        "cantidad": 4,
-        "idProducto": "4"
-      }
-    ]
-  },
-
-  "updVentaId": null,
-  "updVentaInput": null,
-}
-```
-
-mutation UpdVentaMutation($updVentaId: ID!, $updVentaInput: VentaInput) {
-  updVenta(id: $updVentaId, input: $updVentaInput) {
-    message
-  }
-}
-
----
-
-{
-  "buscarVentaIdVenta": "3",
-
-  "buscarDetalleIdVenta": "1",
   "calculoTotalIdVenta": "1",
 
   "addVentaInput": {
     "fechaVenta": "20/10/1999",
     "detalleVenta":[
       {
-        "idVenta":"2",
+        "idVenta": "3",
         "cantidad": 2,
         "idProducto": "3"
       },
       {
-        "idVenta":"3",
+        "idVenta": "3",
         "cantidad": 4,
         "idProducto": "4"
       }
@@ -94,6 +72,7 @@ mutation UpdVentaMutation($updVentaId: ID!, $updVentaInput: VentaInput) {
   },
 
   "updVentaId": "3",
+  
   "updVentaInput": {
     "fechaVenta": "21/11/1999",
     "detalleVenta":[
@@ -101,7 +80,7 @@ mutation UpdVentaMutation($updVentaId: ID!, $updVentaInput: VentaInput) {
         "idVenta":"3",
         "cantidad": 1,
         "idProducto": "3"
-        
+
       },
       {
         "idVenta":"3",
@@ -110,6 +89,9 @@ mutation UpdVentaMutation($updVentaId: ID!, $updVentaInput: VentaInput) {
       }
     ]
   },
+  
+  "delVentaId": "3",
 
-  "delVentaId": "3"
+  "actualizarTotalIdVenta": "3"
 }
+```

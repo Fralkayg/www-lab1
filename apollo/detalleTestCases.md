@@ -47,15 +47,15 @@ mutation BuscarDetalleMutation($buscarDetalleIdVenta: ID!) {
   "addDetalleInput": {
         "cantidad": 1,
         "idProducto": "1",
-        "idVenta": "4"
+        "idVenta": "2"
     },
     "updDetalleId": "4",
     "updDetalleInput": {
         "cantidad": 2,
         "idProducto": "1",
-        "idVenta": "4"
+        "idVenta": "2"
     },
     "delDetalleId": "4",
-    "buscarDetalleIdVenta": "4"
+    "buscarDetalleIdVenta": "2"
 }
 ```

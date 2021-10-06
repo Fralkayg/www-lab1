@@ -20,7 +20,6 @@ module.exports = `
     }
 
     extend type Mutation{
-        buscarDetalle(idVenta: ID!): [DetalleVenta]
         calculoTotal(idVenta: ID!): Int
         addVenta(input: VentaInput): Alert
         updVenta(id: ID!, input: VentaInput): Alert

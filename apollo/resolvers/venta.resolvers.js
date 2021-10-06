@@ -19,7 +19,7 @@ module.exports = {
         calculoTotal(obj, { idVenta }){
             let total = 0;
 
-            const detalleVenta = detalleVentaResolvers.Mutation.buscarDetalle(obj, { idVenta: idVenta });
+            const detalleVenta = detalleVentaResolvers.Query.buscarDetalle(obj, { idVenta: idVenta });
 
             detalleVenta.forEach( (detalle) => {
                 const producto = productoResolvers.Query.getProd(obj, { id: detalle.idProducto});
@@ -59,7 +59,7 @@ module.exports = {
             if (isOk){
                 const venta = ventas[indice];
 
-                let detalles = detalleVentaResolvers.Mutation.buscarDetalle(obj, { idVenta: id });
+                let detalles = detalleVentaResolvers.Query.buscarDetalle(obj, { idVenta: id });
 
                 detalles.forEach( (detalle) => {
                     detalleVentaResolvers.Mutation.delDetalle(obj, { id: detalle.idDetalle });
@@ -92,7 +92,7 @@ module.exports = {
             const isOk = (indice == -1)? false:true;
 
             if (isOk){
-                detalles = detalleVentaResolvers.Mutation.buscarDetalle(obj, { idVenta: idVenta});
+                detalles = detalleVentaResolvers.Query.buscarDetalle(obj, { idVenta: idVenta});
 
                 detalles.forEach( (detalle) => {
                     detalleVentaResolvers.Mutation.delDetalle(obj, { id: detalle.idDetalle });
