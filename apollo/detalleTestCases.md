@@ -1,24 +1,41 @@
 # Query - Mutation
 
 ```js
-query Query($buscarProductoId: ID!) {
-  buscarProducto(id: $buscarProductoId) {
+query Query($getProdId: ID!) {
+  getProd(id: $getProdId) {
     idProducto
     descripcion
     valor
     stock
   }
+
 }
 
-mutation Mutation($addDetalleInput: DetalleVentaInput, $updDetalleId: ID!, $updDetalleInput: DetalleVentaInput, $delDetalleId: ID!) {
-  addDetalle(input: $addDetalleInput) {
+
+mutation Mutation($addDetalleInput: DetalleVentaInput) {
+   addDetalle(input: $addDetalleInput) {
     message
   }
-  updDetalle(id: $updDetalleId, input: $updDetalleInput) {
+}
+mutation Mutation2($updDetalleId: ID!, $updDetalleInput: DetalleVentaInput){
+    updDetalle(id: $updDetalleId, input: $updDetalleInput) {
     message
   }
-  delDetalle(id: $delDetalleId) {
+}
+
+mutation Mutation3 ($delDetalleId: ID!){
+    delDetalle(id: $delDetalleId) {
     message
+  }
+}
+
+
+mutation BuscarDetalleMutation($buscarDetalleIdVenta: ID!) {
+  buscarDetalle(idVenta: $buscarDetalleIdVenta) {
+    idVenta
+    cantidad
+    idProducto
+    idDetalle
   }
 }
 ```
@@ -26,7 +43,7 @@ mutation Mutation($addDetalleInput: DetalleVentaInput, $updDetalleId: ID!, $updD
 # Variables
 ```json
 {
-  "buscarProductoId": "1",
+  "getProdId": "1",
   "addDetalleInput": {
         "cantidad": 1,
         "idProducto": "1",
@@ -38,6 +55,7 @@ mutation Mutation($addDetalleInput: DetalleVentaInput, $updDetalleId: ID!, $updD
         "idProducto": "1",
         "idVenta": "4"
     },
-    "delDetalleId": "4"
+    "delDetalleId": "4",
+    "buscarDetalleIdVenta": "4"
 }
 ```

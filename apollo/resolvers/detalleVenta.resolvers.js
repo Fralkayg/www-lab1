@@ -13,7 +13,13 @@ module.exports = {
             if (producto != undefined){
                 if (producto.stock > input.cantidad){
                     producto.stock -= input.cantidad;
-                    productos[indiceProducto] = producto;
+
+                    console.log(input.cantidad);
+
+                    productoResolvers.Mutation.updProd(obj, {id: producto.idProducto, input: { 
+                        "descripcion": producto.descripcion,
+                        "valor": producto.valor,
+                        "stock": producto.stock }});
 
                     const idDetalle = String(detalleVentas.length + 1);
 
@@ -45,7 +51,8 @@ module.exports = {
                     productoAntiguo = productoResolvers.Mutation.updProd(obj, {id: productoAntiguo.idProducto, input: { 
                         "descripcion": productoAntiguo.descripcion,
                         "valor": productoAntiguo.valor,
-                        "stock": productoAntiguo.stock + detalleVenta.stock }});
+                        "stock": productoAntiguo.stock + detalleVenta.cantidad 
+                    }});
                     
                     productoNuevo = productoResolvers.Mutation.updProd(obj, {id: productoNuevo.idProducto, input: {
                         "descripcion": productoNuevo.descripcion,
