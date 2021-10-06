@@ -16,10 +16,6 @@ module.exports = `
         idVenta: String
     }
 
-    extend type Query{
-        buscarProducto(id: ID!): Producto
-    }
-
     extend type Mutation{
         addDetalle(input: DetalleVentaInput): Alert
         updDetalle(id: ID!, input: DetalleVentaInput): Alert

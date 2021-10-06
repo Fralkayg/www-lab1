@@ -1,25 +1,16 @@
-//todo
+const { isNil } = require("lodash");
 let detalleVentas = require("../detalleVentas");
-let productos = require("../productos");
 let productoResolvers = require('../resolvers/producto.resolvers');
 
 module.exports = {
-    Query:{
-        buscarProducto(obj, { id }){    
-            return productos.find( (producto) => id == producto.idProducto);
-        }
-    },
     Mutation: {
         buscarDetalle(obj, { idVenta }){
             return detalleVentas.filter( (detalle) => detalle.idVenta == idVenta);
         },
         addDetalle(obj, { input }){
-            const indiceProducto = productos.findIndex( (producto) => input.idProducto == producto.idProducto);
-            
-            const isOk = (indiceProducto == -1)? false: true;
-            
-            if (isOk){
-                let producto = productos[indiceProducto];
+            let producto = productoResolvers.Query.getProd(obj, { id: input.idProducto });
+
+            if (producto != undefined){
                 if (producto.stock > input.cantidad){
                     producto.stock -= input.cantidad;
                     productos[indiceProducto] = producto;

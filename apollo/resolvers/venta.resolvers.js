@@ -1,6 +1,7 @@
 //todo
 const detalleVentaResolvers = require('../resolvers/detalleVenta.resolvers');
 let ventas = require("../ventas");
+const productoResolvers = require('./producto.resolvers');
 // let detalleVentas = require("../detalleVentas");
 
 module.exports = {    
@@ -21,7 +22,7 @@ module.exports = {
             const detalleVenta = detalleVentaResolvers.Mutation.buscarDetalle(obj, { idVenta: idVenta });
 
             detalleVenta.forEach( (detalle) => {
-                const producto = detalleVentaResolvers.Query.buscarProducto(obj, { id: detalle.idProducto});
+                const producto = productoResolvers.Query.getProd(obj, { id: detalle.idProducto});
                 
                 const costo = producto.valor * detalle.cantidad;
 
