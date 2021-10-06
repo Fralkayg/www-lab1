@@ -8,32 +8,40 @@ module.exports = {
             return detalleVentas.filter( (detalle) => detalle.idVenta == idVenta);
         },
         addDetalle(obj, { input }){
-            let producto = productoResolvers.Query.getProd(obj, { id: input.idProducto });
+            let venta = ventaResolvers.Query.buscarVenta(obj, { idVenta: input.idVenta });
 
-            if (producto != undefined){
-                if (producto.stock > input.cantidad){
-                    producto.stock -= input.cantidad;
+            if (venta != undefined){
+                let producto = productoResolvers.Query.getProd(obj, { id: input.idProducto });
 
-                    console.log(input.cantidad);
+                if (producto != undefined){
+                    if (producto.stock > input.cantidad){
+                        producto.stock -= input.cantidad;
 
-                    productoResolvers.Mutation.updProd(obj, {id: producto.idProducto, input: { 
-                        "descripcion": producto.descripcion,
-                        "valor": producto.valor,
-                        "stock": producto.stock }});
+                        console.log(input.cantidad);
 
-                    const idDetalle = String(detalleVentas.length + 1);
+                        productoResolvers.Mutation.updProd(obj, {id: producto.idProducto, input: { 
+                            "descripcion": producto.descripcion,
+                            "valor": producto.valor,
+                            "stock": producto.stock }});
 
-                    const detalle = {idDetalle, ...input};
+                        const idDetalle = String(detalleVentas.length + 1);
 
-                    detalleVentas.push(detalle);
+                        const detalle = {idDetalle, ...input};
 
-                    return { message: `Se agrego el nuevo detalle de venta con ID ${idDetalle}`, id: idDetalle, id: idDetalle };
+                        detalleVentas.push(detalle);
+
+                        return { message: `Se agrego el nuevo detalle de venta con ID ${idDetalle}`, id: idDetalle, id: idDetalle };
+                    }else{
+                        return { message: `No hay suficiente stock del producto con ID ${input.idProducto}` };
+                    }
                 }else{
-                    return { message: `No hay suficiente stock del producto con ID ${input.idProducto}` };
+                    return { message: `El producton con ID ${input.idProducto} no existe.`};
                 }
             }else{
-                return { message: `El producton con ID ${input.idProducto} no existe.`};
+                return { message: `La venta con ID ${input.idVenta} no existe.`};
             }
+
+            
         },
         updDetalle(obj, { id, input }){
             const indice = detalleVentas.findIndex( (detalleVenta) => detalleVenta.idDetalle == id);
@@ -66,9 +74,16 @@ module.exports = {
 
                     //calcular el total nuevamente
 
-                    venta = ventaResolvers.Query.buscarVenta(obj, { idVenta: detalleActualizado.idVenta });
+                    const venta = ventaResolvers.Query.buscarVenta(obj, { idVenta: detalleVenta.idVenta });
 
-                    let detalles = ventas.filter( (detalle) => detalle.idDetalle != detalleActualizado.idDetalle);
+                    if (venta != undefined){
+                        console.log("aca");
+                    }
+                    else{
+                        console.log("aca2");
+                    }
+
+                    let detalles = venta.detalleVenta.filter( (detalle) => detalle.idDetalle != detalleActualizado.idDetalle);
 
                     detalles.push(detalleActualizado);
 
