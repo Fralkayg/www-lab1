@@ -68,29 +68,24 @@ module.exports = {
                         "stock": productoNuevo.stock - input.cantidad
                     }});
 
-                    const detalleActualizado = Object.assign(detalleVenta, { id, ...input});
+                    const detalleActualizado = Object.assign(detalleVenta, { ...input});
 
                     detalleVentas[indice] = detalleActualizado;
 
+                    ventaResolvers.Mutation.actualizarTotal(obj, { id: detalleVenta.idVenta });
+
                     //calcular el total nuevamente
 
-                    const venta = ventaResolvers.Query.buscarVenta(obj, { idVenta: detalleVenta.idVenta });
+                    // const venta = ventaResolvers.Query.buscarVenta(obj, { idVenta: detalleVenta.idVenta });
 
-                    if (venta != undefined){
-                        console.log("aca");
-                    }
-                    else{
-                        console.log("aca2");
-                    }
+                    // let detalles = venta.detalleVenta.filter( (detalle) => detalle.idDetalle != detalleActualizado.idDetalle);
 
-                    let detalles = venta.detalleVenta.filter( (detalle) => detalle.idDetalle != detalleActualizado.idDetalle);
+                    // detalles.push(detalleActualizado);
 
-                    detalles.push(detalleActualizado);
-
-                    ventaResolvers.Mutation.updVenta(obj, { id: detalleActualizado.idVenta, input: {
-                        fechaVenta: venta.fechaVenta,
-                        detalleVenta: detalles
-                    }});
+                    // ventaResolvers.Mutation.updVenta(obj, { id: detalleActualizado.idVenta, input: {
+                    //     fechaVenta: venta.fechaVenta,
+                    //     detalleVenta: detalles
+                    // }});
 
                     return { message: `Se actualizo el detalle de venta con ID: ${id}` };
                 }else{

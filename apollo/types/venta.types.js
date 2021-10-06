@@ -25,5 +25,6 @@ module.exports = `
         addVenta(input: VentaInput): Alert
         updVenta(id: ID!, input: VentaInput): Alert
         delVenta(id: ID!): Alert
+        actualizarTotal(idVenta: ID!): Alert
     }
 `

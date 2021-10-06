@@ -59,7 +59,7 @@ module.exports = {
             if (isOk){
                 const venta = ventas[indice];
 
-                detalles = detalleVentaResolvers.Mutation.buscarDetalle(obj, { idVenta: id });
+                let detalles = detalleVentaResolvers.Mutation.buscarDetalle(obj, { idVenta: id });
 
                 detalles.forEach( (detalle) => {
                     detalleVentaResolvers.Mutation.delDetalle(obj, { id: detalle.idDetalle });
@@ -86,7 +86,7 @@ module.exports = {
                 return { message: `No se puede actualizar la venta con ID: ${id} debido a que no se encontró la venta.` };
             }            
         },
-        delVenta(obj, id){
+        delVenta(obj, { id }){
             const indice = ventas.findIndex( (venta) => venta.idVenta == id);
 
             const isOk = (indice == -1)? false:true;
@@ -105,5 +105,18 @@ module.exports = {
                 return { message: `No se pudo eliminar la venta con ID: ${id} debido a que no se encontró la venta.` };
             }
         },
+        actualizarTotal(obj, { id }){
+            const indice = ventas.findIndex( (venta) => venta.idVenta == id);
+
+            const isOk = (indice == - 1)? false: true;
+            
+            if (isOk){
+                let venta = ventas[indice];
+                venta.total = this.calculoTotal(obj, { idVenta: id });
+                ventas[indice] = venta;
+                return { message: `Se actualizo la venta con ID: ${id}`}
+            }
+            return { message: `No se pudo actualizar la venta con ID: ${id}`}
+        }
     }
 }
