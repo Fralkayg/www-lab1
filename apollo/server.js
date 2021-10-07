@@ -84,6 +84,8 @@ const detalleVentaResolvers = {
 
                         detalleVentas.push(detalle);
 
+                        ventaResolvers.Mutation.actualizarTotal(obj, {id: input.idVenta});
+
                         return { message: `Se agrego el nuevo detalle de venta con ID ${idDetalle}`, id: idDetalle, id: idDetalle };
                     }else{
                         return { message: `No hay suficiente stock del producto con ID ${input.idProducto}` };
@@ -185,6 +187,25 @@ const ventaResolvers = {
         addVenta(obj, { input }){
             const idVenta = String(ventas.length + 1);
 
+            let AuxDetallesConId= [];
+
+            let Aux = detalleVentas.length + 1;
+
+            input.detalleVenta.forEach( (detalle) => {
+                const idDetalle = String(Aux);
+                detalle.idDetalle = idDetalle;
+                AuxDetallesConId.push(detalle);
+                Aux+=1;
+            });
+
+            input.detalleVenta = AuxDetallesConId;
+
+            let total = 0;
+
+            const venta = { idVenta, total, ...input };
+
+            ventas.push(venta);
+
             input.detalleVenta.forEach( (detalle) => {
                 detalle.idVenta = idVenta;
                 const result = detalleVentaResolvers.Mutation.addDetalle(obj, { input: {
@@ -192,14 +213,7 @@ const ventaResolvers = {
                     "idProducto": detalle.idProducto,
                     "idVenta": detalle.idVenta
                 }});
-                detalle.idDetalle = result.id;
             });
-
-            let total = this.calculoTotal(obj, { idVenta: idVenta });
-
-            const venta = { idVenta, total, ...input };
-
-            ventas.push(venta);
             
             return { message: `Se agrego una nueva venta con ID ${idVenta}`};
         },
@@ -244,7 +258,7 @@ const ventaResolvers = {
             const isOk = (indice == -1)? false:true;
 
             if (isOk){
-                detalles = detalleVentaResolvers.Query.buscarDetalle(obj, { idVenta: idVenta});
+                detalles = detalleVentaResolvers.Query.buscarDetalle(obj, { idVenta: id});
 
                 detalles.forEach( (detalle) => {
                     detalleVentaResolvers.Mutation.delDetalle(obj, { id: detalle.idDetalle });

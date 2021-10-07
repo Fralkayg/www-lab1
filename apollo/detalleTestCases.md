@@ -1,17 +1,6 @@
 # Query - Mutation
 
 ```js
-query Query($getProdId: ID!) {
-  getProd(id: $getProdId) {
-    idProducto
-    descripcion
-    valor
-    stock
-  }
-
-}
-
-
 mutation Mutation($addDetalleInput: DetalleVentaInput) {
    addDetalle(input: $addDetalleInput) {
     message
@@ -43,7 +32,6 @@ mutation BuscarDetalleMutation($buscarDetalleIdVenta: ID!) {
 # Variables
 ```json
 {
-  "getProdId": "1",
   "addDetalleInput": {
         "cantidad": 1,
         "idProducto": "1",
